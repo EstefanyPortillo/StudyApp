@@ -1,0 +1,50 @@
+<ion-header [translucent]="true">
+
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [text]="getBackButtonText()" defaultHref="/list-topic"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-title>
+      Alejandro Lezcano
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" *ngIf="usuarios">
+  <ion-item>
+    <ion-icon aria-hidden="true" name="list-outline" color="primary"></ion-icon>
+    <ion-label class="ion-text-wrap ">
+     
+     
+      <ion-list id="nombre">
+        <ion-item>
+          <ion-input label="Nombre" placeholder="Nombre" id="nombre" [(ngModel)]= "topics.name"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input type="number" label="Orden" placeholder="Orden" id="orden" [(ngModel)]= "topics.order "></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input type="number" label="Prioridad" placeholder="Prioridad" id="priority" [(ngModel)]= "topics.priority"></ion-input>
+        </ion-item>
+        
+        <ion-item>
+          <ion-label>Color:</ion-label>
+          <input type="color" [(ngModel)]="selectedColor" (ionChange)="saveColor()"/>
+        </ion-item>
+        <ion-item>
+          <ion-input [(ngModel)]="selectedColor" ></ion-input>
+        </ion-item>
+
+        
+      </ion-list>
+      
+    </ion-label>
+  </ion-item>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="saveTopic()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

@@ -1,0 +1,35 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [text]="getBackButtonText()" defaultHref="/"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" *ngIf="usuarios">
+  <ion-item>
+    <ion-icon aria-hidden="true" name="person-circle" color="primary"></ion-icon>
+    <ion-label class="ion-text-wrap ">
+     
+     
+      <ion-list id="nombre">
+        <ion-label for="nombre">Nombre : {{ usuarios.name }}</ion-label>
+      </ion-list>
+      <ion-list id="apellido">
+        <ion-label for="apellido">Apellido : {{ usuarios.last_name }}</ion-label>
+      </ion-list>
+      <ion-list id="email">
+        <ion-label for="email">Email : {{ usuarios.email }}</ion-label>
+      </ion-list>
+      <ion-list id="contraseña"> 
+        <ion-label for="contraseña">Contraseña : {{ usuarios.password }}</ion-label>
+        
+      </ion-list>
+      
+     
+
+    </ion-label>
+  </ion-item>
+  
+
+</ion-content>
