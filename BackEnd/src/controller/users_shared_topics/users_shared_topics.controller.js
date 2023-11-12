@@ -27,9 +27,9 @@ const eliminar = async function( req, res) {
     console. log( "eliminar usuarios ") ;
     try {
 
-        let user_recieved = req.params.id_user_recieved
+        let user_received = req.params.id_user_received
         let topic_id = req.params.id_topic
-        await UserSharedTopicService.eliminar(user_recieved,topic_id);
+        await UserSharedTopicService.eliminar(user_received,topic_id);
        
         res.json({
             success: true

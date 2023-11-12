@@ -7,7 +7,7 @@ const listar = async function (textoBuscar,user_id) {
     const topics = await sequelize.query(`SELECT topics.*, users.name as Owner
         FROM topics 
         left join users on users.id=topics.owner_user_id
-        left join shared_topics_users as stu on stu.user_recieved =  ${user_id}
+        left join shared_topics_users as stu on stu.user_received =  ${user_id}
         WHERE 
         (topics.owner_user_id = ${user_id} OR topics.id=stu.topic_id) AND
         UPPER(topics.name) LIKE UPPER('%${textoBuscar}%')

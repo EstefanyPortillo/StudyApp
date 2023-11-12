@@ -145,7 +145,7 @@ const login = async function( req, res) {
     
 };
 const logout = async function( req, res) {
-   
+   console.log(res.locals.userId)
    try {
     const userDb= await sequelize.query("UPDATE users set token=null where id= " +res.locals.userId+ "");
     res.json({
