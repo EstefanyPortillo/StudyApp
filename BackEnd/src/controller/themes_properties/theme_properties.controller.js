@@ -4,12 +4,13 @@ const listar = async function (req, res) {
   console.log("listar propiedades de los temas");
   
   try {
-    const themes_properties = await ThemePropertyService.listar(req.query.filtro || '');
+   
+    const themes_properties = await ThemePropertyService.listar(req.query.filtro || '',req.query.theme_id || '');
 
-    if (themes_properties) {
+    if (themes_properties && themes_properties[0]) {
       res.json({
         success: true,
-        tema_properties: themes_properties,
+        tema_properties: themes_properties[0],
       });
     } else {
       res.json({

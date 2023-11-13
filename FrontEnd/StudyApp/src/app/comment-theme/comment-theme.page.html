@@ -1,0 +1,46 @@
+<ion-header [translucent]="true">
+
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [text]="getBackButtonText()" defaultHref= "/list-theme/"topic_id></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-title>
+     Estefany Portillo
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" *ngIf="themes_properties">
+    <ion-card style="max-height: 400px; overflow: hidden;" >
+        <ion-card-header>
+          <ion-card-title>{{name}} </ion-card-title>
+          <ion-card-subtitle>{{keywords}} </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content style="max-height: 100%; overflow-y: auto;"  >
+          <ion-list *ngIf="themes_properties !== null && themes_properties !== undefined">
+            <ion-item *ngFor="let theme of themes_properties" style="margin-bottom: 8px;">
+              <ion-label>
+                <h2>{{ theme.owner }}</h2>
+                <h3>{{ theme.property_name }}</h3>
+                <p>{{ theme.property_value }}</p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+          
+          
+        </ion-card-content>
+    </ion-card>
+    <ion-item>
+      <ion-input placeholder="Escribe el nombre del comentario..."></ion-input>
+      
+    </ion-item>
+    <ion-item>
+      <ion-input placeholder="Escribe el comentario..."></ion-input>
+      <ion-button slot="end" (click)="saveTheme()"  fill="clear">
+        <ion-icon name="send"></ion-icon>
+      </ion-button>
+    </ion-item>
+
+</ion-content>

@@ -34,9 +34,9 @@
     <ion-item *ngFor="let theme of themes" >
       <ion-label >{{theme.id}} - {{ theme.name}}  - {{theme.description}} </ion-label>
       
-      <ion-icon slot="end" name="create-outline" [routerLink]="'/edit-topic/'+ theme.id"></ion-icon>
+      <ion-icon slot="end" name="create-outline"[routerLink]="'/edit-theme/' + topic_id + '/' + theme.id"></ion-icon>
       <ion-icon slot="end" name="trash-outline" (click)="eliminar(theme.id)"></ion-icon>
-      <ion-icon  slot="end" name="chatbubble-outline"></ion-icon>
+      <ion-icon  slot="end" name="chatbubble-outline" [routerLink]="'/comment-theme/' + topic_id + '/' + theme.id+ '/' + theme.name+ '/' + theme.keywords"></ion-icon>
     </ion-item>
     
    <!--
@@ -44,7 +44,7 @@
   --> 
   </ion-list>
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button routerLink="/edit-topic/0">
+    <ion-fab-button [routerLink]="'/edit-theme/' + topic_id + '/' + 0">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
     

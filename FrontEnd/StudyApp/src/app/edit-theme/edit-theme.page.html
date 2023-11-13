@@ -1,0 +1,41 @@
+<ion-header [translucent]="true">
+
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [text]="getBackButtonText()" defaultHref= "/list-theme/"topic_id></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-title>
+     Estefany Portillo
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" *ngIf="usuarios">
+  <ion-item>
+    <ion-icon aria-hidden="true" name="list-outline" color="primary"></ion-icon>
+    <ion-label class="ion-text-wrap ">
+     
+     
+      <ion-list id="nombre">
+        <ion-item>
+          <ion-input label="Nombre" placeholder="Nombre" id="nombre" [(ngModel)]= "themes.name"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input label="Descripcion" placeholder="Descripcion" id="descripcion" [(ngModel)]= "themes.description "></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input label="Keywords" placeholder="Keywords" id="keywords" [(ngModel)]= "themes.keywords"></ion-input>
+        </ion-item>
+
+      </ion-list>
+      
+    </ion-label>
+  </ion-item>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="saveTheme()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

@@ -31,6 +31,14 @@ const routes: Routes = [
     loadChildren: () => import('./list-theme/list-theme.module').then( m => m.ListThemePageModule)
   },
   {
+    path: 'edit-theme/:topic_id/:theme_id',
+    loadChildren: () => import('./edit-theme/edit-theme.module').then(m => m.EditThemePageModule)
+  },
+  {
+    path: 'comment-theme/:topic_id/:theme_id/:theme_name/:theme_keywords',
+    loadChildren: () => import('./comment-theme/comment-theme.module').then(m => m.CommentThemePageModule)
+  },
+  {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full'

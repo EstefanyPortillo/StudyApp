@@ -2,20 +2,22 @@
 const { sequelize } = require("../connection");
 const { ThemePropertiesModel } = require("../model/theme_properties.model");
 
-const listar = async function (textoBuscar) {
+const listar = async function (textoBuscar,theme_id) {
   console.log("listar themes properties service");
 
   try {
     const theme_properties = await sequelize.query(
-      `SELECT * FROM themes_properties 
-        WHERE 1=1
-          AND property_name LIKE '%${textoBuscar}%'
-      ORDER BY id`
+      `SELECT themes_properties.*,CONCAT(users.name,' ',users.last_name) as owner,users.id as owner_id FROM themes_properties 
+       left join users on users.id=themes_properties.owner_user_id
+        WHERE 
+        theme_id = '${theme_id}'
+        AND UPPER(property_name) LIKE UPPER('%${textoBuscar}%')
+      ORDER BY themes_properties.id`
     );
 
-    if (theme_properties) {
+    if (theme_properties  && theme_properties[0]) {
       
-      return theme_properties[0];
+      return theme_properties;
 
     } else {
       return [];

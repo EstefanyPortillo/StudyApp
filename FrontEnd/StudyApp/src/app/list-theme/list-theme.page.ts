@@ -11,21 +11,24 @@ import { ActivatedRoute,Router } from '@angular/router';
   styleUrls: ['list-theme.page.scss'],
 })
 export class ListThemePage implements OnInit {
-  private topic_id="";
   private activatedRoute = inject(ActivatedRoute);
+  topic_id=this.activatedRoute.snapshot.paramMap.get('topic_id') as string;
+ 
   private data = inject(DataService);
   constructor(private toastController: ToastController,private router: Router) {}
   themes: any=[];
+
+  ionViewWillEnter(): void {
+    this.topic_id = this.activatedRoute.snapshot.paramMap.get('topic_id') as string;
+    this.getThemes(this.topic_id);
+  }
   refresh(ev: any) {
     setTimeout(() => {
       (ev as RefresherCustomEvent).detail.complete();
     }, 3000);
   }
-  ionViewWillEnter(): void {
-    this.topic_id = this.activatedRoute.snapshot.paramMap.get('topic_id') as string;
-    this.getThemes(this.topic_id);
-  }
   ngOnInit(): void {
+    this.topic_id = this.activatedRoute.snapshot.paramMap.get('topic_id') as string;
     //this.getThemes();
    
   }
