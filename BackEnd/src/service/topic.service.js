@@ -1,7 +1,7 @@
 const { sequelize } = require("../connection");
 const { TopicsModel } = require("../model/topic.model");
 
-const listar = async function (textoBuscar,user_id) {
+const listar = async function (textoBuscar, user_id) {
   console.log("listar topics ACA");
   try {
     const topics = await sequelize.query(`SELECT topics.*, users.name as Owner
@@ -11,7 +11,7 @@ const listar = async function (textoBuscar,user_id) {
         WHERE 
         (topics.owner_user_id = ${user_id} OR topics.id=stu.topic_id) AND
         UPPER(topics.name) LIKE UPPER('%${textoBuscar}%')
-        ORDER BY topics.id`);
+        ORDER BY topics.order_index`);
     // EN topics[0] SE ENCUENTRA NUESTRO LISTADO DE SQL
     if (topics && topics[0]) {
       return topics;
@@ -53,7 +53,7 @@ const actualizar = async function (data) {
       topicExiste = await TopicsModel.findByPk(id);
     }
     if (topicExiste) {
-      topicsRetorno = await TopicsModel.update(data,{where: {id : id}});
+      topicsRetorno = await TopicsModel.update(data, { where: { id: id } });
     } else {
       topicsRetorno = await TopicsModel.create(data);
     }
@@ -80,9 +80,27 @@ const eliminar = async function (id) {
   }
 };
 
+const actualizarOrden = async function (orderData) {
+  console.log("Escribi algo mira");
+  const transaction = await sequelize.transaction();
+  try {
+    for (const item of orderData) {
+      await TopicsModel.update({ order_index: item.order_index }, {
+        where: { id: item.id },
+        transaction
+      });
+    }
+    await transaction.commit();
+  } catch (error) {
+    await transaction.rollback();
+    throw error;
+  }
+};
+
 module.exports = {
   listar,
   actualizar,
   eliminar,
   consultarPorCodigo,
+  actualizarOrden,
 };

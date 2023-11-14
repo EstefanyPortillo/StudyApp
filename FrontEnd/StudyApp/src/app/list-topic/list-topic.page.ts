@@ -116,8 +116,6 @@ export class ListTopicPage implements OnInit {
     }).then(result => {
       if (result.data.success) {
         this.topics = result.data.topics;
-        console.log(this.topics);
-
       } else {
         console.log(result.data.error);
       }
@@ -126,6 +124,7 @@ export class ListTopicPage implements OnInit {
       console.log(error.message);
     })
   }
+
   getUsers() {
     axios.get('http://localhost:3000/users/list', {
       headers: {
@@ -143,4 +142,68 @@ export class ListTopicPage implements OnInit {
       console.log(error.message);
     })
   }
+
+  sortAZ() {
+    this.topics.sort((a: any, b: any) => {
+      const nameA = a.name.toUpperCase();
+      const nameB = b.name.toUpperCase();
+      if (nameA < nameB) {
+        this.topics
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
+  }
+
+  sortZA() {
+    this.topics.sort((a: any, b: any) => {
+      const nameA = a.name.toUpperCase();
+      const nameB = b.name.toUpperCase();
+      if (nameA > nameB) {
+        return -1;
+      }
+      if (nameA < nameB) {
+        return 1;
+      }
+      return 0;
+    });
+  }
+
+  sortIdAsc() {
+    this.topics.sort((a: any, b: any) => a.id - b.id);
+  }
+
+  sortIdDesc() {
+    this.topics.sort((a: any, b: any) => b.id - a.id);
+  }
+
+  saveOrder() {
+    let token = localStorage.getItem('token');
+    let config = {
+      headers: {
+        Authorization: token,
+      },
+    };
+    const orderData = this.topics.map((tema: any, index: any) => ({ id: tema.id, order_index: index }));
+    axios.post('http://localhost:3000/topics/update-order', orderData, config)
+      .then((result) => {
+        if (result.data.success) {
+          this.presentToast('Orden guardado con éxito');
+
+        }
+      })
+      .catch((error) => {
+        this.presentToast('Error al guardar el orden: ' + error.message);
+      });
+  }
+
+  reorder(event: any) {
+    const moverItem = this.topics.splice(event.detail.from, 1)[0];
+    this.topics.splice(event.detail.to, 0, moverItem);
+    event.detail.complete();
+  }
+
 }
