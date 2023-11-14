@@ -116,11 +116,11 @@ const listarSharedMeService = async function (userId) {
   console.log("listar topicos");
   try {
     const topics = await sequelize.query(`
-      SELECT Distinct t.*,st.id as id_shared_topics, u.name as shared_by_user_name, u.last_name as shared_by_user_last_name
-      FROM shared_topics st
-      INNER JOIN topics t ON st.topic_id = t.id
-      INNER JOIN users u ON u.id = st.user_shared_id
-      WHERE st.user_destination_id = :userId
+      SELECT Distinct t.*, stu.id as id_shared_topics_users, u.name as shared_by_user_name, u.last_name as shared_by_user_last_name
+      FROM shared_topics_users stu
+      INNER JOIN topics t ON stu.topic_id = t.id
+      INNER JOIN users u ON u.id = stu.user_shared
+      WHERE stu.user_received = :userId
       ORDER BY t.id`, {
       replacements: { userId: userId },
       type: sequelize.QueryTypes.SELECT
@@ -132,6 +132,7 @@ const listarSharedMeService = async function (userId) {
     throw error;
   }
 };
+
 
 module.exports = {
   listar,
