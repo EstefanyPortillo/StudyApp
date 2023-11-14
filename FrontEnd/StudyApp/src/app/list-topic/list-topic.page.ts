@@ -11,47 +11,46 @@ import { Router } from '@angular/router';
   templateUrl: 'list-topic.page.html',
   styleUrls: ['list-topic.page.scss'],
 })
-export class ListTopicPage implements OnInit {
+export class ListTopicPage {
   usuarios: any = [];
   private topic_id_add = 0;
   selectedUser: number | null = null;
   @ViewChild(IonModal) modal!: IonModal; // Usa '!' para indicar que se inicializará en el constructor
-
   isModalOpen = false;
+  topics: any = [];
+  private data = inject(DataService);
+
+  constructor(
+    private toastController: ToastController,
+    private router: Router,
+  ) { }
+
 
   setOpen(isOpen: boolean, topic_selected: number) {
-
     this.isModalOpen = isOpen;
     this.topic_id_add = topic_selected;
   }
 
-  private data = inject(DataService);
-  constructor(private toastController: ToastController, private router: Router) { }
-
-  topics: any = [];
   refresh(ev: any) {
     setTimeout(() => {
       (ev as RefresherCustomEvent).detail.complete();
     }, 3000);
   }
+
   ionViewWillEnter(): void {
     this.getTopics();
     this.getUsers();
-  }
-  ngOnInit(): void {
-    //this.getTopics();
-
   }
 
   confirmar() {
     const userId = localStorage.getItem('userId');
     if (this.selectedUser !== null) {
-      console.log('Usuario seleccionado:', this.selectedUser);
       var data = {
         user_shared: userId,
         user_received: this.selectedUser,
         topic_id: this.topic_id_add
       }
+
       axios.post('http://localhost:3000/user/shared/topic/update', data, {
         headers: {
           'Authorization': localStorage.getItem("token")
@@ -73,6 +72,7 @@ export class ListTopicPage implements OnInit {
   getMessages(): Message[] {
     return this.data.getMessages();
   }
+
   eliminar(id: number) {
     // Usar la función confirm para mostrar una ventana de confirmación al usuario
     const confirmar = window.confirm("¿Estás seguro de que deseas eliminar este tópico?");
@@ -96,6 +96,7 @@ export class ListTopicPage implements OnInit {
       });
     }
   }
+
   async presentToast(mensaje: string) {
     const toast = await this.toastController.create({
       message: mensaje,
@@ -104,10 +105,11 @@ export class ListTopicPage implements OnInit {
     })
     await toast.present();
   }
-  Home() {
 
+  Home() {
     this.router.navigate(["/home"]);
   }
+
   getTopics() {
     axios.get('http://localhost:3000/topics/list', {
       headers: {
@@ -119,7 +121,6 @@ export class ListTopicPage implements OnInit {
       } else {
         console.log(result.data.error);
       }
-
     }).catch(error => {
       console.log(error.message);
     })
@@ -188,6 +189,7 @@ export class ListTopicPage implements OnInit {
       },
     };
     const orderData = this.topics.map((tema: any, index: any) => ({ id: tema.id, order_index: index }));
+
     axios.post('http://localhost:3000/topics/update-order', orderData, config)
       .then((result) => {
         if (result.data.success) {
