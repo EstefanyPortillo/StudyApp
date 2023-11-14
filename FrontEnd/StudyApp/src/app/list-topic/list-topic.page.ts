@@ -1,5 +1,5 @@
-import { Component, OnInit, inject,ViewChild  } from '@angular/core';
-import { RefresherCustomEvent, ToastController,IonModal } from '@ionic/angular';
+import { Component, OnInit, inject, ViewChild } from '@angular/core';
+import { RefresherCustomEvent, ToastController, IonModal } from '@ionic/angular';
 import { MessageComponent } from '../message/message.component';
 import { OverlayEventDetail } from '@ionic/core/components';
 import { DataService, Message } from '../services/data.service';
@@ -12,8 +12,8 @@ import { Router } from '@angular/router';
   styleUrls: ['list-topic.page.scss'],
 })
 export class ListTopicPage implements OnInit {
-  usuarios: any=[];
-  private topic_id_add=0;
+  usuarios: any = [];
+  private topic_id_add = 0;
   selectedUser: number | null = null;
   @ViewChild(IonModal) modal!: IonModal; // Usa '!' para indicar que se inicializará en el constructor
 
@@ -22,13 +22,13 @@ export class ListTopicPage implements OnInit {
   setOpen(isOpen: boolean, topic_selected: number) {
 
     this.isModalOpen = isOpen;
-    this.topic_id_add=topic_selected;
+    this.topic_id_add = topic_selected;
   }
-  
-  private data = inject(DataService);
-  constructor(private toastController: ToastController,private router: Router) { }
 
-  topics: any=[];
+  private data = inject(DataService);
+  constructor(private toastController: ToastController, private router: Router) { }
+
+  topics: any = [];
   refresh(ev: any) {
     setTimeout(() => {
       (ev as RefresherCustomEvent).detail.complete();
@@ -40,34 +40,34 @@ export class ListTopicPage implements OnInit {
   }
   ngOnInit(): void {
     //this.getTopics();
-   
+
   }
 
   confirmar() {
     const userId = localStorage.getItem('userId');
     if (this.selectedUser !== null) {
       console.log('Usuario seleccionado:', this.selectedUser);
-      var data={
-        user_shared:userId,
+      var data = {
+        user_shared: userId,
         user_recieved: this.selectedUser,
-        topic_id:this.topic_id_add
+        topic_id: this.topic_id_add
       }
-      axios.post('http://localhost:3000/user/shared/topic/update', data ,{
+      axios.post('http://localhost:3000/user/shared/topic/update', data, {
         headers: {
           'Authorization': localStorage.getItem("token")
         }
-      }).then(async result=>{
-        if(result.data.success){
+      }).then(async result => {
+        if (result.data.success) {
           await this.presentToast('Topic Compartido con Exito');
           this.router.navigate(["/list-topic"]);
-        }else{
-          await this.presentToast('Error '+result.data.error);
+        } else {
+          await this.presentToast('Error ' + result.data.error);
         }
-      }).catch(async error=>{
-        await this.presentToast('Error '+error.message);
+      }).catch(async error => {
+        await this.presentToast('Error ' + error.message);
         console.log(error.message);
       })
-    } 
+    }
   }
 
   getMessages(): Message[] {
@@ -76,7 +76,7 @@ export class ListTopicPage implements OnInit {
   eliminar(id: number) {
     // Usar la función confirm para mostrar una ventana de confirmación al usuario
     const confirmar = window.confirm("¿Estás seguro de que deseas eliminar este tópico?");
-  
+
     if (confirmar) {
       axios.delete('http://localhost:3000/topics/delete/' + id, {
         headers: {
@@ -96,48 +96,50 @@ export class ListTopicPage implements OnInit {
       });
     }
   }
-  async presentToast(mensaje: string){
+  async presentToast(mensaje: string) {
     const toast = await this.toastController.create({
       message: mensaje,
-      duration:1500,
+      duration: 1500,
       position: 'top'
     })
     await toast.present();
   }
-  Home(){
-   
+  Home() {
+
     this.router.navigate(["/home"]);
   }
-  getTopics(){
+  getTopics() {
     axios.get('http://localhost:3000/topics/list', {
       headers: {
         'Authorization': localStorage.getItem("token")
       },
-    }).then(result=>{
-      if(result.data.success){
-        this.topics=result.data.topics;
-      }else{
-        console.log( result.data.error);
+    }).then(result => {
+      if (result.data.success) {
+        this.topics = result.data.topics;
+        console.log(this.topics);
+
+      } else {
+        console.log(result.data.error);
       }
-    
-    }).catch(error=>{
+
+    }).catch(error => {
       console.log(error.message);
     })
   }
-  getUsers(){
+  getUsers() {
     axios.get('http://localhost:3000/users/list', {
       headers: {
         'Authorization': localStorage.getItem("token")
       },
-    }).then(result=>{
-      if(result.data.success){
-        this.usuarios=result.data.usuarios;
-       
-      }else{
-        console.log( result.data.error);
+    }).then(result => {
+      if (result.data.success) {
+        this.usuarios = result.data.usuarios;
+
+      } else {
+        console.log(result.data.error);
       }
-    
-    }).catch(error=>{
+
+    }).catch(error => {
       console.log(error.message);
     })
   }
