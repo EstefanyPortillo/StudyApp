@@ -97,10 +97,48 @@ const actualizarOrden = async function (orderData) {
   }
 };
 
+
+const soloListarTopicos = async function () {
+  console.log("listar topicos");
+  try {
+    const topics = await sequelize.query(`SELECT * 
+      FROM topics
+      ORDER BY order_index ASC`, { type: sequelize.QueryTypes.SELECT });
+
+    return topics;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+const listarSharedMeService = async function (userId) {
+  console.log("listar topicos");
+  try {
+    const topics = await sequelize.query(`
+      SELECT Distinct t.*,st.id as id_shared_topics, u.name as shared_by_user_name, u.last_name as shared_by_user_last_name
+      FROM shared_topics st
+      INNER JOIN topics t ON st.topic_id = t.id
+      INNER JOIN users u ON u.id = st.user_shared_id
+      WHERE st.user_destination_id = :userId
+      ORDER BY t.id`, {
+      replacements: { userId: userId },
+      type: sequelize.QueryTypes.SELECT
+    });
+
+    return topics;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 module.exports = {
   listar,
   actualizar,
   eliminar,
   consultarPorCodigo,
   actualizarOrden,
+  soloListarTopicos,
+  listarSharedMeService,
 };

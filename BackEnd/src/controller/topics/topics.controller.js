@@ -103,10 +103,54 @@ const actualizarOrden = async function (req, res) {
     }
 };
 
+const soloListar = async function (req, res) {
+    console.log("listar topicos controller");
+    try {
+        const topics = await TopicService.soloListarTopicos();
+        res.json({
+            success: true,
+            topicos: topics,
+        });
+    } catch (error) {
+        console.log(error);
+        res.json({
+            success: false,
+            error: error.message,
+        });
+    }
+};
+
+const listarSharedMeController = async function (req, res) {
+    console.log("listarSharedMe topicos controller");
+    try {
+      const topics = await TopicService.listarSharedMeService(req.params.id || "");
+      if (topics) {
+        res.json({
+          success: true,
+          topicos: topics,
+        });
+      } else {
+        res.json({
+          success: true,
+          topicos: [],
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      res.json({
+        sucess: false,
+        error: error.message,
+      });
+    }
+  };
+
+
 module.exports = {
     listar,
     actualizar,
     eliminar,
     consultarPorCodigo,
     actualizarOrden,
+    soloListar,
+    listarSharedMeController,
 };

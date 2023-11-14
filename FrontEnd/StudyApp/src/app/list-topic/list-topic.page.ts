@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   templateUrl: 'list-topic.page.html',
   styleUrls: ['list-topic.page.scss'],
 })
-export class ListTopicPage {
+export class ListTopicPage implements OnInit {
   usuarios: any = [];
   private topic_id_add = 0;
   selectedUser: number | null = null;
@@ -19,11 +19,20 @@ export class ListTopicPage {
   isModalOpen = false;
   topics: any = [];
   private data = inject(DataService);
+  nombreUsuarioActual: string = '';
+  topicsSoloListar: any = [];
+  topicsShareMe: any = [];
+  textoTopicosCompartidos: string = "No se compartieron topicos con el Usuario."
 
   constructor(
     private toastController: ToastController,
     private router: Router,
   ) { }
+
+  ngOnInit() {
+    this.getSolorListarTopics()
+    this.getTopicsShareMe()
+  }
 
 
   setOpen(isOpen: boolean, topic_selected: number) {
@@ -127,6 +136,8 @@ export class ListTopicPage {
   }
 
   getUsers() {
+    const userId = localStorage.getItem("userId"); // Obtiene el ID del usuario de localStorage
+
     axios.get('http://localhost:3000/users/list', {
       headers: {
         'Authorization': localStorage.getItem("token")
@@ -134,6 +145,12 @@ export class ListTopicPage {
     }).then(result => {
       if (result.data.success) {
         this.usuarios = result.data.usuarios;
+        // Encuentra al usuario con el ID correspondiente
+        const usuarioActual = this.usuarios.find((user: any) => user.id.toString() === userId);
+        if (usuarioActual) {
+          // Asigna el nombre del usuario a nombreUsuarioActual
+          this.nombreUsuarioActual = `${usuarioActual.name} ${usuarioActual.last_name}`;
+        }
 
       } else {
         console.log(result.data.error);
@@ -206,6 +223,50 @@ export class ListTopicPage {
     const moverItem = this.topics.splice(event.detail.from, 1)[0];
     this.topics.splice(event.detail.to, 0, moverItem);
     event.detail.complete();
+  }
+
+  getSolorListarTopics() {
+    axios.get('http://localhost:3000/topics/solo-listar', {
+      headers: {
+        'Authorization': localStorage.getItem("token")
+      },
+    }).then(result => {
+      if (result.data.success) {
+        this.topicsSoloListar = result.data.topicos;
+      } else {
+        console.log(result.data.error);
+      }
+    }).catch(error => {
+      console.log(error.message);
+    });
+  }
+
+  getTopicsShareMe() {
+    const user_id = localStorage.getItem('userId');
+
+    let token = localStorage.getItem('token');
+    let config = {
+      headers: {
+        Authorization: token,
+      },
+    };
+    axios
+      .get('http://localhost:3000/topics/shared_me/' + user_id, config)
+      .then((result) => {
+        if (result.data.success == true) {
+          this.topicsShareMe = result.data.topicos
+          console.log(this.topicsShareMe);
+
+          if (this.topicsShareMe.length == 0) {
+            this.textoTopicosCompartidos = "No se compartieron topicos con el Usuario actual"
+          }
+        } else {
+          console.log(result.data.error);
+        }
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
   }
 
 }
