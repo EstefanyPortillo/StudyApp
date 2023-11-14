@@ -17,7 +17,7 @@ const SharedTopicsUsersModel = sequelize.define('SharedTopicsUsers', {
       key: 'id',
     },
   },
-  user_received: {
+  user_recieved: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
