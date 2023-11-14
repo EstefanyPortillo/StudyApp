@@ -49,7 +49,7 @@ export class ListTopicPage implements OnInit {
       console.log('Usuario seleccionado:', this.selectedUser);
       var data = {
         user_shared: userId,
-        user_recieved: this.selectedUser,
+        user_received: this.selectedUser,
         topic_id: this.topic_id_add
       }
       axios.post('http://localhost:3000/user/shared/topic/update', data, {

@@ -2,13 +2,14 @@ const {sequelize} = require("../connection");
 const {SharedTopicsUsersModel}= require("../model/user_shared_topics.model");
 
 const actualizar = async function(data) {
-  console.log("Crear o evitar duplicados de user_shared_topics");
+  console.log("Crear o evitar duplicados de user_shared_topics", data);
 
   try {
       const existingRecord = await SharedTopicsUsersModel.findOne({
           where: {
             user_shared: data.user_shared,
             topic_id: data.topic_id,
+            user_received:data.user_received
           },
       });
       // Si existe un registro

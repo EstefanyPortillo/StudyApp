@@ -4,7 +4,7 @@ const { TopicsModel } = require("../model/topic.model");
 const listar = async function (textoBuscar, user_id) {
   console.log("listar topics ACA");
   try {
-    const topics = await sequelize.query(`SELECT topics.*, users.name as Owner
+    const topics = await sequelize.query(`SELECT Distinct topics.*, users.name as Owner
         FROM topics 
         left join users on users.id=topics.owner_user_id
         left join shared_topics_users as stu on stu.user_received =  ${user_id}
