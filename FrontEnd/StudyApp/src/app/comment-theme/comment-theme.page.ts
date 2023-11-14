@@ -1,7 +1,7 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule,KeyValuePipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonicModule, Platform, ToastController } from '@ionic/angular';
+import { RefresherCustomEvent,IonicModule, Platform, ToastController } from '@ionic/angular';
 import { DataService, Message } from '../services/data.service';
 import axios from 'axios';
 
@@ -11,42 +11,58 @@ import axios from 'axios';
   styleUrls: ['./comment-theme.page.scss'],
 })
 export class CommentThemePage implements OnInit {
-  themes_properties : any = {};
-  loadingData: boolean = true;
-  public message!: Message;
-  private data = inject(DataService);
-  private activatedRoute = inject(ActivatedRoute);
   private platform = inject(Platform);
-  usuarios : any = {};
+  private activatedRoute = inject(ActivatedRoute);
+  topic_id=this.activatedRoute.snapshot.paramMap.get('topic_id') as string;
+  theme_id = this.activatedRoute.snapshot.paramMap.get('theme_id') as string;
   name = this.activatedRoute.snapshot.paramMap.get('theme_name') as string;
   keywords = this.activatedRoute.snapshot.paramMap.get('theme_keywords') as string;
-  topic_id =   this.activatedRoute.snapshot.paramMap.get('topic_id') as string;
+  user = localStorage.getItem("userId");
+  private data = inject(DataService);
+  constructor(private toastController: ToastController,private router: Router) {}
+  themes: any=[];
+  name_theme="";
+  value_theme="";
 
-  constructor( private toastController: ToastController, private router: Router ) {}
-  ionViewWillEnter() {
-    const id = this.activatedRoute.snapshot.paramMap.get('theme_id') as string;
-  
-    this.loadingData = true;
-  
-    axios.get('http://localhost:3000/themes-properties/list?theme_id=' + id, {
-      headers: {
-        'Authorization': localStorage.getItem('token')
-      },
-    }).then(result => {
-      if (result.data.success) {
-            this.themes_properties = result.data.tema_properties;
-      } else {
-        console.log(result.data.error);
-      }
-    }).catch(error => {
-      console.log(error.message);
-    }).finally(() => {
-      this.loadingData = false;
-    });
+  ionViewWillEnter(): void {
+    this.theme_id = this.activatedRoute.snapshot.paramMap.get('theme_id') as string;
+    this.user = localStorage.getItem("userId");
+    this.getThemes(this.theme_id);
   }
+  refresh(ev: any) {
+    setTimeout(() => {
+      (ev as RefresherCustomEvent).detail.complete();
+    }, 3000);
+  }
+  ngOnInit(): void {
+    this.topic_id = this.activatedRoute.snapshot.paramMap.get('topic_id') as string;
+  }
+  getMessages(): Message[] {
+    return this.data.getMessages();
+  }
+  eliminar(id: number){
+    axios.delete('http://localhost:3000/themes-properties/delete/'+ id, {
+      headers: {
+        'Authorization': localStorage.getItem("token")
+      },
+    }).then(async result=>{
+      if(result.data.success){
   
-  ngOnInit() {
+        await this.presentToast('Theme Property Eliminado');
+        const url = `/comment-theme/${this.topic_id}/${this.theme_id}/${this.name}/${this.keywords}`;
+
+        // Recarga la página
+        window.location.href = url;
+      }else{
+        await this.presentToast('Error '+ result.data.error);
+        console.log( result.data.error);
+       
+      }
     
+    }).catch(async error=>{
+      await this.presentToast('Error '+ error.message);
+      console.log(error.message);
+    })
   }
   async presentToast(mensaje: string){
     const toast = await this.toastController.create({
@@ -56,24 +72,40 @@ export class CommentThemePage implements OnInit {
     })
     await toast.present();
   }
-  saveTheme(){
-    let id=null;
-    if(this.themes_properties.id===0){
-      id=null;
-    }else{
-      id=this.themes_properties.id
-    }
+  topicos(){
+   
+    this.router.navigate(["/list-topic"]);
+  }
+  getThemes(theme_id : string){
+    axios.get('http://localhost:3000/themes-properties/list?theme_id='+theme_id, {
+      headers: {
+        'Authorization': localStorage.getItem("token")
+      },
+    }).then(result=>{
+      if(result.data.success){
+        this.themes=result.data.tema_properties;
+      }else{
+        console.log( result.data.error);
+      }
+    
+    }).catch(error=>{
+      console.log(error.message);
+    })
+  }
+  getBackButtonText() {
+    const isIos = this.platform.is('ios')
+    return isIos ? 'Inbox' : '';
+  }
+  saveThemeProperty(){
+
     var data={
-      id:id,
-      name:this.themes_properties.name,
-      description:this.themes_properties.description,
-      create_date:new Date().toISOString().substring(0, 10),
-      keywords:this.themes_properties.keywords,
+      id:null,
+      property_name:this.name_theme,
+      property_value:this.value_theme,
       owner_user_id: localStorage.getItem("userId"),
-      topic_id: this.topic_id,
-      avatar: ''
+      theme_id: this.theme_id,
     }
-    axios.post('http://localhost:3000/themes/update', data ,{
+    axios.post('http://localhost:3000/themes-properties/update', data ,{
       headers: {
         'Authorization': localStorage.getItem("token")
       }
@@ -81,10 +113,14 @@ export class CommentThemePage implements OnInit {
     }).then(async result=>{
       if(result.data.success){
         
-        await this.presentToast('theme Guardado');
+        await this.presentToast('theme Property Guardado');
         
-        this.router.navigate(["/list-theme/"+this.topic_id]);
-      }else{
+        // Construye la URL con los parámetros
+        const url = `/comment-theme/${this.topic_id}/${this.theme_id}/${this.name}/${this.keywords}`;
+
+        // Recarga la página
+        window.location.href = url;
+            }else{
         await this.presentToast('Error '+result.data.error);
         
       }
@@ -93,9 +129,5 @@ export class CommentThemePage implements OnInit {
       await this.presentToast('Error '+error.message);
       console.log(error.message);
     })
-  }
-  getBackButtonText() {
-    const isIos = this.platform.is('ios')
-    return isIos ? 'Inbox' : '';
   }
 }
