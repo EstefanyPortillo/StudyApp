@@ -81,7 +81,7 @@ const eliminar = async function (id) {
 };
 
 const actualizarOrden = async function (orderData) {
-  console.log("Escribi algo mira");
+  console.log("Escribi algo mira", orderData);
   const transaction = await sequelize.transaction();
   try {
     for (const item of orderData) {
@@ -101,9 +101,12 @@ const actualizarOrden = async function (orderData) {
 const soloListarTopicos = async function () {
   console.log("listar topicos");
   try {
-    const topics = await sequelize.query(`SELECT * 
+    const topics = await sequelize.query(`
+      SELECT topics.*, users.name as nombre, users.last_name as apellido
       FROM topics
-      ORDER BY order_index ASC`, { type: sequelize.QueryTypes.SELECT });
+      JOIN users ON topics.owner_user_id = users.id
+      ORDER BY order_index ASC`,
+      { type: sequelize.QueryTypes.SELECT });
 
     return topics;
   } catch (error) {
@@ -134,6 +137,24 @@ const listarSharedMeService = async function (userId) {
 };
 
 
+const deleteTopicService = async function (id) {
+  console.log("eliminar topics");
+  try {
+    await sequelize.query(`
+      DELETE FROM shared_topics_users WHERE id = :id;`, {
+      replacements: { id: id },
+      type: sequelize.QueryTypes.RAW
+    });
+    // Si no hay errores, la eliminación fue exitosa
+    return true;
+  } catch (error) {
+    console.error(error);
+    // Si hay un error, la eliminación falló
+    return false;
+  }
+};
+
+
 module.exports = {
   listar,
   actualizar,
@@ -142,4 +163,5 @@ module.exports = {
   actualizarOrden,
   soloListarTopicos,
   listarSharedMeService,
+  deleteTopicService,
 };

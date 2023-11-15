@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, ViewChild } from '@angular/core';
-import { RefresherCustomEvent, ToastController, IonModal } from '@ionic/angular';
+import { RefresherCustomEvent, ToastController, IonModal, AlertController } from '@ionic/angular';
 import { MessageComponent } from '../message/message.component';
 import { OverlayEventDetail } from '@ionic/core/components';
 import { DataService, Message } from '../services/data.service';
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   templateUrl: 'list-topic.page.html',
   styleUrls: ['list-topic.page.scss'],
 })
-export class ListTopicPage implements OnInit {
+export class ListTopicPage {
   usuarios: any = [];
   private topic_id_add = 0;
   selectedUser: number | null = null;
@@ -22,18 +22,13 @@ export class ListTopicPage implements OnInit {
   nombreUsuarioActual: string = '';
   topicsSoloListar: any = [];
   topicsShareMe: any = [];
-  textoTopicosCompartidos: string = "No se compartieron topicos con el Usuario."
+  textoTopicosCompartidos: string = "Topicos compartidos con el usuario"
 
   constructor(
     private toastController: ToastController,
     private router: Router,
+    private alertController: AlertController
   ) { }
-
-  ngOnInit() {
-    this.getSolorListarTopics()
-    this.getTopicsShareMe()
-  }
-
 
   setOpen(isOpen: boolean, topic_selected: number) {
     this.isModalOpen = isOpen;
@@ -49,6 +44,8 @@ export class ListTopicPage implements OnInit {
   ionViewWillEnter(): void {
     this.getTopics();
     this.getUsers();
+    this.getSolorListarTopics()
+    this.getTopicsShareMe()
   }
 
   confirmar() {
@@ -66,6 +63,7 @@ export class ListTopicPage implements OnInit {
         }
       }).then(async result => {
         if (result.data.success) {
+          this.getTopicsShareMe()
           await this.presentToast('Topic Compartido con Exito');
           this.router.navigate(["/list-topic"]);
         } else {
@@ -82,28 +80,26 @@ export class ListTopicPage implements OnInit {
     return this.data.getMessages();
   }
 
-  eliminar(id: number) {
+  eliminar(id: any) {
     // Usar la función confirm para mostrar una ventana de confirmación al usuario
-    const confirmar = window.confirm("¿Estás seguro de que deseas eliminar este tópico?");
+    //const confirmar = window.confirm("¿Estás seguro de que deseas eliminar este tópico?");
+    axios.delete('http://localhost:3000/topics/delete/' + id, {
+      headers: {
+        'Authorization': localStorage.getItem("token")
+      },
+    }).then(async result => {
+      if (result.data.success) {
+        await this.presentToast('Tópico Eliminado');
+        this.getSolorListarTopics();
+      } else {
+        await this.presentToast('Error ' + result.data.error);
+        console.log(result.data.error);
+      }
+    }).catch(async error => {
+      await this.presentToast('Error ' + error.message);
+      console.log(error.message);
+    });
 
-    if (confirmar) {
-      axios.delete('http://localhost:3000/topics/delete/' + id, {
-        headers: {
-          'Authorization': localStorage.getItem("token")
-        },
-      }).then(async result => {
-        if (result.data.success) {
-          await this.presentToast('Tópico Eliminado');
-          this.getTopics();
-        } else {
-          await this.presentToast('Error ' + result.data.error);
-          console.log(result.data.error);
-        }
-      }).catch(async error => {
-        await this.presentToast('Error ' + error.message);
-        console.log(error.message);
-      });
-    }
   }
 
   async presentToast(mensaje: string) {
@@ -162,7 +158,7 @@ export class ListTopicPage implements OnInit {
   }
 
   sortAZ() {
-    this.topics.sort((a: any, b: any) => {
+    this.topicsSoloListar.sort((a: any, b: any) => {
       const nameA = a.name.toUpperCase();
       const nameB = b.name.toUpperCase();
       if (nameA < nameB) {
@@ -177,7 +173,7 @@ export class ListTopicPage implements OnInit {
   }
 
   sortZA() {
-    this.topics.sort((a: any, b: any) => {
+    this.topicsSoloListar.sort((a: any, b: any) => {
       const nameA = a.name.toUpperCase();
       const nameB = b.name.toUpperCase();
       if (nameA > nameB) {
@@ -191,11 +187,11 @@ export class ListTopicPage implements OnInit {
   }
 
   sortIdAsc() {
-    this.topics.sort((a: any, b: any) => a.id - b.id);
+    this.topicsSoloListar.sort((a: any, b: any) => a.id - b.id);
   }
 
   sortIdDesc() {
-    this.topics.sort((a: any, b: any) => b.id - a.id);
+    this.topicsSoloListar.sort((a: any, b: any) => b.id - a.id);
   }
 
   saveOrder() {
@@ -205,7 +201,7 @@ export class ListTopicPage implements OnInit {
         Authorization: token,
       },
     };
-    const orderData = this.topics.map((tema: any, index: any) => ({ id: tema.id, order_index: index }));
+    const orderData = this.topicsSoloListar.map((tema: any, index: any) => ({ id: tema.id, order_index: index }));
 
     axios.post('http://localhost:3000/topics/update-order', orderData, config)
       .then((result) => {
@@ -220,8 +216,8 @@ export class ListTopicPage implements OnInit {
   }
 
   reorder(event: any) {
-    const moverItem = this.topics.splice(event.detail.from, 1)[0];
-    this.topics.splice(event.detail.to, 0, moverItem);
+    const moverItem = this.topicsSoloListar.splice(event.detail.from, 1)[0];
+    this.topicsSoloListar.splice(event.detail.to, 0, moverItem);
     event.detail.complete();
   }
 
@@ -255,7 +251,6 @@ export class ListTopicPage implements OnInit {
       .then((result) => {
         if (result.data.success == true) {
           this.topicsShareMe = result.data.topicos
-          console.log(this.topicsShareMe);
 
           if (this.topicsShareMe.length == 0) {
             this.textoTopicosCompartidos = "No se compartieron topicos con el Usuario actual"
@@ -267,6 +262,54 @@ export class ListTopicPage implements OnInit {
       .catch((error) => {
         console.log(error.message);
       });
+  }
+
+  async confirmDelete(id: string, off: string) {
+    const alert = await this.alertController.create({
+      header: 'Mensaje',
+      message: 'Desea eliminar el registro?',
+      buttons: [
+        {
+          text: 'Aceptar',
+          handler: () => {
+            off == "off" ? this.eliminar(id) : this.eliminarSharedMe(id); //ternaria
+
+            // if (off == "off") {
+            //   this.eliminar(id)
+            // } else {
+            //   this.eliminarSharedMe(id)
+            // }
+          },
+        },
+        {
+          text: 'Cancelar',
+          handler: () => {
+            console.log('Cancelado');
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  eliminarSharedMe(id: any) {
+    axios.delete('http://localhost:3000/topics/delete-share-me-topics/' + id, {
+      headers: {
+        'Authorization': localStorage.getItem("token")
+      },
+    }).then(async result => {
+      if (result.data.success) {
+        await this.presentToast('Tópico Eliminado');
+        this.getTopicsShareMe()
+      } else {
+        await this.presentToast('Error ' + result.data.error);
+        console.log(result.data.error);
+      }
+    }).catch(async error => {
+      await this.presentToast('Error ' + error.message);
+      console.log(error.message);
+    });
+
   }
 
 }

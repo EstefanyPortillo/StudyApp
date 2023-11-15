@@ -123,26 +123,41 @@ const soloListar = async function (req, res) {
 const listarSharedMeController = async function (req, res) {
     console.log("listarSharedMe topicos controller");
     try {
-      const topics = await TopicService.listarSharedMeService(req.params.id || "");
-      if (topics) {
-        res.json({
-          success: true,
-          topicos: topics,
-        });
-      } else {
-        res.json({
-          success: true,
-          topicos: [],
-        });
-      }
+        const topics = await TopicService.listarSharedMeService(req.params.id || "");
+        if (topics) {
+            res.json({
+                success: true,
+                topicos: topics,
+            });
+        } else {
+            res.json({
+                success: true,
+                topicos: [],
+            });
+        }
     } catch (error) {
-      console.log(error);
-      res.json({
-        sucess: false,
-        error: error.message,
-      });
+        console.log(error);
+        res.json({
+            sucess: false,
+            error: error.message,
+        });
     }
-  };
+};
+
+const deleteTopicsController = async function (req, res) {
+    console.log("eliminar deleteTopicsController");
+    try {
+        await TopicService.deleteTopicService(req.params.off)
+        res.json({
+            success: true
+        });
+    } catch (error) {
+        res.json({
+            success: false,
+            error: error.message
+        });
+    }
+};
 
 
 module.exports = {
@@ -153,4 +168,5 @@ module.exports = {
     actualizarOrden,
     soloListar,
     listarSharedMeController,
+    deleteTopicsController,
 };

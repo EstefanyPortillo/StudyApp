@@ -58,10 +58,10 @@
         <ion-reorder-group [disabled]="false" (ionItemReorder)="reorder($event)">
           <ion-item *ngFor="let topic of topicsSoloListar">
             <ion-label [style.color]="topic.color" [routerLink]="'/list-theme/'+ topic.id">{{topic.id}} - {{
-              topic.name}} -
+              topic.name}} - {{topic.nombre}} {{topic.apellido}}
               {{topic.owner_user_id}} </ion-label>
             <ion-icon slot="end" name="create-outline" [routerLink]="'/edit-topic/'+ topic.id"></ion-icon>
-            <ion-icon slot="end" name="trash-outline" (click)="eliminar(topic.id)"></ion-icon>
+            <ion-icon slot="end" name="trash-outline" (click)="confirmDelete(topic.id,'off')"></ion-icon>
             <ion-icon id="open-modal" slot="end" (click)="setOpen(true,topic.id)" name="person-add-outline"></ion-icon>
 
             <ion-modal [isOpen]="isModalOpen">
@@ -102,16 +102,16 @@
   <!-- Topicos compartidos con el usuario -->
   <ion-card>
     <ion-card-header class="comment-author">
-      Topicos compartidos con el usuario
+      {{textoTopicosCompartidos}}
     </ion-card-header>
     <ion-card-content>
       <ion-list>
-        <ion-item *ngFor="let topic of topicsShareMe">
-          <ion-label [style.color]="topic.color" [routerLink]="'/list-theme/'+ topic.id">
-            {{topic.id}} - {{topic.name}} - {{topic.shared_by_user_name}} {{topic.shared_by_user_last_name}}
+        <ion-item *ngFor="let topicShare of topicsShareMe">
+          <ion-label [style.color]="topicShare.color" [routerLink]="'/list-theme/'+ topicShare.id">
+            {{topicShare.id}} - {{topicShare.name}} - {{topicShare.shared_by_user_name}} {{topicShare.shared_by_user_last_name}}
           </ion-label>
-          <ion-icon slot="end" name="create-outline" [routerLink]="'/edit-topic/'+ topic.id"></ion-icon>
-          <ion-icon slot="end" name="trash-outline" (click)="eliminar(topic.id)"></ion-icon>
+          <!-- <ion-icon slot="end" name="create-outline" [routerLink]="'/edit-topic/'+ topic.id"></ion-icon> -->
+          <ion-icon slot="end" name="trash-outline" (click)="confirmDelete(topicShare.id_shared_topics_users, '')"></ion-icon>
 
         </ion-item>
       </ion-list>
