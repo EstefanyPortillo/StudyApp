@@ -56,8 +56,8 @@ export class LoginUserPage implements OnInit {
       console.log(error.message);
     })
   }
-  getBackButtonText() {
+ /* getBackButtonText() {
     const isIos = this.platform.is('ios')
     return isIos ? 'Inbox' : '';
-  }
+  }*/
 }
