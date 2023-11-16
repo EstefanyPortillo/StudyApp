@@ -90,6 +90,6 @@ export class EditThemePage implements OnInit {
   }
   getBackButtonText() {
     const isIos = this.platform.is('ios')
-    return isIos ? 'Inbox' : '';
+    return isIos ? 'Atrás' : '';
   }
 }

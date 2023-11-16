@@ -157,7 +157,7 @@ export class ListTopicPage {
     })
   }
 
-  sortAZ() {
+ Ascendente() {
     this.topicsSoloListar.sort((a: any, b: any) => {
       const nameA = a.name.toUpperCase();
       const nameB = b.name.toUpperCase();
@@ -172,7 +172,7 @@ export class ListTopicPage {
     });
   }
 
-  sortZA() {
+ Descendente() {
     this.topicsSoloListar.sort((a: any, b: any) => {
       const nameA = a.name.toUpperCase();
       const nameB = b.name.toUpperCase();
@@ -185,15 +185,6 @@ export class ListTopicPage {
       return 0;
     });
   }
-
-  sortIdAsc() {
-    this.topicsSoloListar.sort((a: any, b: any) => a.id - b.id);
-  }
-
-  sortIdDesc() {
-    this.topicsSoloListar.sort((a: any, b: any) => b.id - a.id);
-  }
-
   saveOrder() {
     let token = localStorage.getItem('token');
     let config = {
@@ -253,7 +244,7 @@ export class ListTopicPage {
           this.topicsShareMe = result.data.topicos
 
           if (this.topicsShareMe.length == 0) {
-            this.textoTopicosCompartidos = "No se compartieron topicos con el Usuario actual"
+            this.textoTopicosCompartidos = "Compartieron topicos con el Usuario actual"
           }
         } else {
           console.log(result.data.error);
@@ -267,7 +258,7 @@ export class ListTopicPage {
   async confirmDelete(id: string, off: string) {
     const alert = await this.alertController.create({
       header: 'Mensaje',
-      message: 'Desea eliminar el registro?',
+      message: 'Desea eliminar el Tópico?',
       buttons: [
         {
           text: 'Aceptar',

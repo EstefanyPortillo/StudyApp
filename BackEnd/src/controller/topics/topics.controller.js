@@ -27,6 +27,23 @@ const listar = async function (req, res) {
     }
 };
 
+const soloListar = async function (req, res) {
+    console.log("listar topicos controller");
+    try {
+        const topics = await TopicService.soloListarTopicos();
+        res.json({
+            success: true,
+            topicos: topics,
+        });
+    } catch (error) {
+        console.log(error);
+        res.json({
+            success: false,
+            error: error.message,
+        });
+    }
+};
+
 const consultarPorCodigo = async function (req, res) {
     console.log("consultar Topics por codigo");
     try {
@@ -98,23 +115,6 @@ const actualizarOrden = async function (req, res) {
             success: true,
         });
     } catch (error) {
-        res.json({
-            success: false,
-            error: error.message,
-        });
-    }
-};
-
-const soloListar = async function (req, res) {
-    console.log("listar topicos controller");
-    try {
-        const topics = await TopicService.soloListarTopicos();
-        res.json({
-            success: true,
-            topicos: topics,
-        });
-    } catch (error) {
-        console.log(error);
         res.json({
             success: false,
             error: error.message,
