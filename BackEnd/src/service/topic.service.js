@@ -97,7 +97,6 @@ const actualizarOrden = async function (orderData) {
   }
 };
 
-
 const soloListarTopicos = async function () {
   console.log("listar topicos");
   try {
@@ -136,7 +135,6 @@ const listarSharedMeService = async function (userId) {
   }
 };
 
-
 const deleteTopicService = async function (id) {
   console.log("eliminar topics");
   try {
@@ -153,7 +151,6 @@ const deleteTopicService = async function (id) {
     return false;
   }
 };
-
 
 module.exports = {
   listar,

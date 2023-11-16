@@ -3,7 +3,6 @@ const {SharedTopicsUsersModel}= require("../model/user_shared_topics.model");
 
 const actualizar = async function(data) {
   console.log("Crear o evitar duplicados de user_shared_topics", data);
-
   try {
       const existingRecord = await SharedTopicsUsersModel.findOne({
           where: {
@@ -35,7 +34,6 @@ const eliminar = async function (id_user, id_topic) {
           topic_id: id_topic,
         },
       });
-  
       if (deletedRows > 0) {
         return true;
       } else {

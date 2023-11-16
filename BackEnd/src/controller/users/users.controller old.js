@@ -22,10 +22,9 @@ const listar = async function(req, res) {
             error: error.message
         });
     }
-    
-      
-    //res.json(users);
+  //res.json(users);
 };
+
 const consultarPorCodigo = async function(req, res) {
     console.log("consultar Usuarios por codigo");
     try {
@@ -50,11 +49,10 @@ const consultarPorCodigo = async function(req, res) {
             success:false,
             error: error.message
         });
-    }
-    
-      
+    }   
     //res.json(users);
 };
+
 const actualizar = async function(req, res) {
     console.log("actualizar usuarios");
     let usuarioRetorno=null; //GUARDARA EL USARIO QUE SE VA A INCLUIR O EDITAR
@@ -93,9 +91,7 @@ const actualizar = async function(req, res) {
             success:false,
             usuarios: error.message
         });
-}
-
-    
+} 
 };
 
 const eliminar = async function( req, res) {

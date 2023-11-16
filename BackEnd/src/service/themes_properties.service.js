@@ -4,7 +4,6 @@ const { ThemePropertiesModel } = require("../model/theme_properties.model");
 
 const listar = async function (textoBuscar,theme_id) {
   console.log("listar themes properties service");
-
   try {
     const theme_properties = await sequelize.query(
       `SELECT themes_properties.*,CONCAT(users.name,' ',users.last_name) as owner,users.id as owner_id FROM themes_properties 

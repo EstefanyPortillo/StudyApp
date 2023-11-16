@@ -9,36 +9,42 @@ const UserModel = sequelize.define('User',{
         autoIncrement: true,
 
     },
+
     name:{
         type: DataTypes.STRING,
         allowNull:false
     },
+
     last_name:{
         type: DataTypes.STRING,
         allowNull:true,
     },
+
     avatar:{
         type: DataTypes.STRING,
         allowNull:true,
     },
+
     email:{
         type: DataTypes.STRING,
         allowNull:true,
     },
+
     password:{
         type: DataTypes.STRING,
         allowNull:true,
     },
+
     deleted:{
         type: DataTypes.BOOLEAN,
         allowNull:false,
     },
+
     token:{
         type: DataTypes.STRING,
         allowNull:true,
     }
-
-    
+ 
 },{
     tableName:'users',
     timestamps:false

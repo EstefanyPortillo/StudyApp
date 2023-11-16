@@ -6,6 +6,7 @@ const TopicsModel = sequelize.define('Topics', {
         primaryKey: true,
         autoIncrement: true,
       },
+
       create_date: {
         type: DataTypes.DATE,
         allowNull: false,
@@ -15,31 +16,38 @@ const TopicsModel = sequelize.define('Topics', {
         type: DataTypes.STRING,
         allowNull: false,
       },
+
       topic_id: {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
+
       order: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+
       priority: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+
       color: {
         type: DataTypes.STRING,
         allowNull: false,
       },
+
       owner_user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+
       order_index: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0
       },
+      
   },{
     tableName:'topics',
     timestamps:false

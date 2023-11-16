@@ -1,5 +1,6 @@
 const {sequelize} = require("../connection");
 const {UserModel}= require("../model/user.model");
+
 const listar = async function(textoBuscar) {
     console.log("listar usuarios ACA");
     try {
@@ -19,10 +20,9 @@ const listar = async function(textoBuscar) {
        console.log(error);
        throw error;
     }
-    
-      
-    //res.json(users);
+//res.json(users);
 };
+
 const consultarPorCodigo = async function(id) {
     console.log("consultar Usuarios por codigo");
     try {
@@ -42,6 +42,7 @@ const consultarPorCodigo = async function(id) {
       
     //res.json(users);
 };
+
 const actualizar = async function(data) {
     console.log("actualizar usuarios");
     let usuarioRetorno=null; //GUARDARA EL USARIO QUE SE VA A INCLUIR O EDITAR
@@ -81,7 +82,6 @@ const eliminar = async function(id) {
     }
     
 };
-
 
 
 module.exports = {

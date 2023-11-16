@@ -2,6 +2,7 @@ const {sequelize} = require("../../connection");
 const {UserModel}= require("../../model/user.model")
 const UserService= require("../../service/user.service")
 const jwt = require('jsonwebtoken')
+
 const listar = async function(req, res) {
     console.log("listar usuarios");
     try {
@@ -23,11 +24,10 @@ const listar = async function(req, res) {
             success:false,
             error: error.message
         });
-    }
-    
-      
+    }     
     //res.json(users);
 };
+
 const consultarPorCodigo = async function(req, res) {
     console.log("consultar Usuarios por codigo");
     try {
@@ -56,12 +56,11 @@ const consultarPorCodigo = async function(req, res) {
       
     //res.json(users);
 };
+
 const actualizar = async function(req, res) {
     console.log("actualizar usuarios");
     let usuarioRetorno=null; //GUARDARA EL USARIO QUE SE VA A INCLUIR O EDITAR
     const data =req.body; // SE OBTIENE LOS DATOS DEL CUERPO DE LA PETICION
-
-
    try {
         usuarioRetorno= await UserService.actualizar(data);
         res.json({
@@ -94,6 +93,7 @@ const eliminar = async function( req, res) {
     }
     
 };
+
 const login = async function( req, res) {
     console.log ("login usuarios");
     try {
@@ -141,9 +141,9 @@ const login = async function( req, res) {
             success: false,
             error: error .message
         });
-    }
-    
+    }  
 };
+
 const logout = async function( req, res) {
    console.log(res.locals.userId)
    try {
@@ -159,6 +159,7 @@ const logout = async function( req, res) {
    }
     
 };
+
 module.exports = {
     listar, actualizar, eliminar,consultarPorCodigo,login,logout
 };

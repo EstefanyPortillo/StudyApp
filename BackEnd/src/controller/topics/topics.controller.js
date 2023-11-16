@@ -1,6 +1,7 @@
 const { sequelize } = require("../../connection");
 const { TopicsModel } = require("../../model/topic.model");
 const TopicService = require("../../service/topic.service")
+
 const listar = async function (req, res) {
     console.log("listar topicos");
     try {
@@ -25,6 +26,7 @@ const listar = async function (req, res) {
         });
     }
 };
+
 const consultarPorCodigo = async function (req, res) {
     console.log("consultar Topics por codigo");
     try {
@@ -158,7 +160,6 @@ const deleteTopicsController = async function (req, res) {
         });
     }
 };
-
 
 module.exports = {
     listar,

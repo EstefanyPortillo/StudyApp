@@ -9,6 +9,7 @@ const SharedTopicsUsersModel = sequelize.define('SharedTopicsUsers', {
     primaryKey: true,
     autoIncrement: true,
   },
+
   user_shared: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -17,6 +18,7 @@ const SharedTopicsUsersModel = sequelize.define('SharedTopicsUsers', {
       key: 'id',
     },
   },
+
   user_received: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -25,6 +27,7 @@ const SharedTopicsUsersModel = sequelize.define('SharedTopicsUsers', {
       key: 'id',
     },
   },
+
   topic_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -33,6 +36,7 @@ const SharedTopicsUsersModel = sequelize.define('SharedTopicsUsers', {
       key: 'id',
     },
   },
+  
 }, {
   tableName: 'shared_topics_users',
   timestamps: false,

@@ -1,9 +1,9 @@
 const {sequelize} = require("../../connection");
 const {ThemesModel}= require("../../model/theme.model")
 const ThemeService= require("../../service/theme.service")
+
 const listar = async function(req, res) {
-    console.log("listar temas");
-   
+console.log("listar temas");
     try {
         const themes = await ThemeService.listar(req.query.filtro || '',req.query.topic_id || '');
         // EN themes[0] SE ENCUENTRA NUESTRO LISTADO DE SQL
@@ -23,10 +23,9 @@ const listar = async function(req, res) {
             success:false,
             error: error.message
         });
-    }
-    
-      
+    }    
 };
+
 const consultarPorCodigo = async function(req, res) {
     console.log("consultar Themes por codigo");
     try {
@@ -50,10 +49,7 @@ const consultarPorCodigo = async function(req, res) {
             success:false,
             error: error.message
         });
-    }
-    
-      
-    //res.json(themes);
+    }    //res.json(themes);
 };
 
 const actualizar = async function(req, res) {
@@ -85,8 +81,7 @@ const eliminar = async function( req, res) {
             success: false,
             error: error.message
         });
-    }
-    
+    }   
 };
 
 module.exports = {

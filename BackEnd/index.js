@@ -8,7 +8,6 @@ app.use(cors ({
     origin: '*'
 }));
 const userRoute= require("./src/route/users/users.route");
-
 const themesRoute= require("./src/route/themes/themes.route");
 const topicsRoute= require("./src/route/topics/topics.route");
 const themesPropertiesRoute= require("./src/route/themes_properties/themes_properties.route");

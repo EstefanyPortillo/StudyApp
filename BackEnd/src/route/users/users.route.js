@@ -2,7 +2,6 @@ const userController = require('../../controller/users/users.controller');
 const Middleware = require('../../middleware/auth.controller');
 
 module.exports = function(app) {
-
     app.get("/users/list",Middleware.auth, userController.listar);
     app.get("/users/:id", Middleware.auth,userController.consultarPorCodigo);
     app.post("/users/update",Middleware.auth, userController.actualizar);

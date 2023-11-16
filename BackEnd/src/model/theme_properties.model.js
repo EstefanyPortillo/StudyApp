@@ -24,6 +24,7 @@ const ThemePropertiesModel = sequelize.define('ThemeProperties', {
         type: DataTypes.INTEGER,
         allowNull: true
     },
+    
     owner_user_id: {
         type: DataTypes.INTEGER,
         allowNull: false
