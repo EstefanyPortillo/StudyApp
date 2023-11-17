@@ -227,7 +227,7 @@ export class ListTopicPage {
       console.log(error.message);
     });
   }
-
+ 
   getTopicsShareMe() {
     const user_id = localStorage.getItem('userId');
 
