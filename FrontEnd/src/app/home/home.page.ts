@@ -38,6 +38,7 @@ export class HomePage implements OnInit {
     }).then(async result=>{
       if(result.data.success){
         this.usuarios=result.data.usuarios;
+        this.getUsers()
         await this.presentToast('Usuario Eliminado');
        
       }else{
